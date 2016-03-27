@@ -1,5 +1,7 @@
 package com.gen.lab2
 
+import com.gen.lab2.Interfaces.IObservable
+
 /**
  * Created by Fenix on 20.03.2016.
  */
@@ -16,9 +18,9 @@ abstract class Observable<T> : IObservable<T> {
     override fun notifyObservers() {
         val data = getChangedData()
         val buffer = synchronized(this) {
-            mObservers.toMutableSet()
+            mObservers.toList()
         }
-        for (observer in buffer) {
+        for (observer in buffer.sortedBy { it.priority }) {
             observer.update(data);
         }
     }
