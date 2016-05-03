@@ -1,6 +1,6 @@
 package com.gen.lab4.Shapes
 
-import com.gen.lab4.ColorEnum
+import com.gen.lab4.Const.ColorEnum
 import com.gen.lab4.ICanvas
 
 /**

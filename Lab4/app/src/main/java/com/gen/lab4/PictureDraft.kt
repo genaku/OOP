@@ -1,13 +1,21 @@
 package com.gen.lab4
 
 import com.gen.lab4.Shapes.Shape
+import java.util.*
 
 class PictureDraft {
-    fun getShapeCount(): Int {
-        return 0
+
+    val shapeList = ArrayList<Shape>()
+
+    fun addShape(shape: Shape) {
+        shapeList.add(shape)
     }
 
-    fun getShape(idx: Int): Shape? {
-        return null
+    fun getShapeCount(): Int {
+        return shapeList.size
+    }
+
+    fun getShape(idx: Int): Shape {
+        return shapeList[idx]
     }
 }

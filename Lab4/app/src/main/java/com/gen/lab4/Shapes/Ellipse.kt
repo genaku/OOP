@@ -1,6 +1,7 @@
 package com.gen.lab4.Shapes
 
-import com.gen.lab4.ColorEnum
+import android.util.Log
+import com.gen.lab4.Const.ColorEnum
 import com.gen.lab4.Point
 import com.gen.lab4.ICanvas
 
@@ -9,8 +10,12 @@ import com.gen.lab4.ICanvas
  */
 class Ellipse(color: ColorEnum, val data: EllipseData): Shape(color) {
     override fun draw(canvas: ICanvas) {
-        throw UnsupportedOperationException()
+        canvas.setColor(color)
+        canvas.drawEllipse(data.center, data.hRadius,data.vRadius)
+    }
+    override fun toString(): String {
+        return "Ellipse: color: ${color.name} data: ${data.toString()}"
     }
 }
 
-data class EllipseData(var center: Point, var hRadius: Int, var vRadius: Int)
+data class EllipseData(var center: Point, var hRadius: Float, var vRadius: Float)

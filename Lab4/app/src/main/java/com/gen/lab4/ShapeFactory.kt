@@ -1,5 +1,7 @@
 package com.gen.lab4
 
+import com.gen.lab4.Const.ColorEnum
+import com.gen.lab4.Const.ShapeType
 import com.gen.lab4.Shapes.*
 import com.github.salomonbrys.kotson.*
 import com.google.gson.*
@@ -8,69 +10,56 @@ import com.google.gson.*
  * Created by Fenix on 24.04.2016.
  */
 class ShapeFactory : IShapeFactory {
-/*
-    val jsonTriangle by lazy {
-        GsonBuilder()
-                .registerTypeAdapter<TriangleData> {
 
-                    write {
-                        beginObject()
-                        value(it.vertex1.x)
-                        value(it.vertex1.y)
-                        endObject()
-                        beginObject()
-                        value(it.vertex2.x)
-                        value(it.vertex2.y)
-                        endObject()
-                        beginObject()
-                        value(it.vertex3.x)
-                        value(it.vertex3.y)
-                        endObject()
-                    }
+    override fun createShape(description: String): Shape? {
 
-                    read {
-                        beginObject()
-                        val x1 = nextInt()
-                        val y1 = nextInt()
-                        endObject()
-                        beginObject()
-                        val x2 = nextInt()
-                        val y2 = nextInt()
-                        endObject()
-                        beginObject()
-                        val x3 = nextInt()
-                        val y3 = nextInt()
-                        endObject()
-                        TriangleData(Point(x1, y1), Point(x2, y2), Point(x3, y3))
-                    }
-
-                }
-                .create()
-    }
-*/
-    override fun createShape(description: String): Shape {
-
-        val parser =  JsonParser();
+        val parser = JsonParser();
         val jsonObj = parser.parse(description)
         val shapeType = ShapeType.valueOf(jsonObj["shape"].asString)
         val color = ColorEnum.valueOf(jsonObj["color"].asString)
         val data = jsonObj["data"]
 
         return when (shapeType) {
-            //ShapeType.rectangle -> Rectangle(shapeData as RectangleData)
-            //ShapeType.ellipse -> Ellipse(shapeData as EllipseData)
-            //ShapeType.regular_polygon -> RegularPolygon(shapeData as PolygonData)
+            ShapeType.rectangle -> Rectangle(color, readRectangleData(data))
+            ShapeType.ellipse -> Ellipse(color, readEllipseData(data))
+            ShapeType.regular_polygon -> RegularPolygon(color, readPolygonData(data))
             ShapeType.triangle -> Triangle(color, readTriangleData(data))
-            else -> Triangle(color, readTriangleData(data))
+            else -> null
         }
     }
 
     private fun readTriangleData(json: JsonElement): TriangleData {
         val array = json.asJsonArray
         return TriangleData(
-                Point(array[0]["x"].asInt,array[0]["y"].asInt),
-                Point(array[1]["x"].asInt,array[1]["y"].asInt),
-                Point(array[2]["x"].asInt,array[2]["y"].asInt)
+                Point(array[0]["x"].asFloat, array[0]["y"].asFloat),
+                Point(array[1]["x"].asFloat, array[1]["y"].asFloat),
+                Point(array[2]["x"].asFloat, array[2]["y"].asFloat)
+        )
+    }
+
+    private fun readRectangleData(json: JsonElement): RectangleData {
+        val array = json.asJsonArray
+        return RectangleData(
+                Point(array[0]["x"].asFloat, array[0]["y"].asFloat),
+                Point(array[1]["x"].asFloat, array[1]["y"].asFloat)
+        )
+    }
+
+    private fun readPolygonData(json: JsonElement): PolygonData {
+        val center = json["center"].asJsonObject
+        return PolygonData(
+                Point(center["x"].asFloat, center["y"].asFloat),
+                json["vertexes"].asInt,
+                json["radius"].asFloat
+        )
+    }
+
+    private fun readEllipseData(json: JsonElement): EllipseData {
+        val center = json["center"].asJsonObject
+        return EllipseData(
+                Point(center["x"].asFloat, center["y"].asFloat),
+                json["h_radius"].asFloat,
+                json["v_radius"].asFloat
         )
     }
 

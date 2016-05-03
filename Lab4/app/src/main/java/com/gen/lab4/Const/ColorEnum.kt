@@ -1,4 +1,4 @@
-package com.gen.lab4
+package com.gen.lab4.Const
 
 enum class ColorEnum {
     green,
